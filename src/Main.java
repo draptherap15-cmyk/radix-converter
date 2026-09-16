@@ -1,8 +1,8 @@
 import java.util.Scanner;
 
 /**
- * Main Application Class
- * Handles Input → Process → Output flow for the Radix Converter
+ * Radix Conversion Calculator
+ * Single-file version: Input -> Process -> Output
  */
 public class Main {
 
@@ -11,7 +11,8 @@ public class Main {
         boolean running = true;
 
         System.out.println("=== Radix Conversion Calculator ===");
-        System.out.println("Supported bases: 2-36 (Binary, Octal, Decimal, Hexadecimal, etc.)");
+        System.out.println("Supported bases: 2-36");
+        System.out.println("Examples: Binary(2), Octal(8), Decimal(10), Hexadecimal(16)");
         System.out.println();
 
         while (running) {
@@ -32,12 +33,12 @@ public class Main {
                 int toBase = Integer.parseInt(scanner.nextLine().trim());
 
                 // PROCESS
-                String result = RadixConverter.convert(number, fromBase, toBase);
+                String result = convert(number, fromBase, toBase);
 
                 // OUTPUT
                 System.out.println();
                 System.out.println("--- Conversion Result ---");
-                System.out.println(number + " (" + RadixConverter.getBaseName(fromBase) + ") = " + result + " (" + RadixConverter.getBaseName(toBase) + ")");
+                System.out.println(number + " (" + getBaseName(fromBase) + ") = " + result + " (" + getBaseName(toBase) + ")");
                 System.out.println();
 
             } catch (NumberFormatException e) {
@@ -46,7 +47,6 @@ public class Main {
                 System.out.println("Error: " + e.getMessage() + "\n");
             }
 
-            // Ask for another conversion
             System.out.print("Convert another number? (yes/no): ");
             String response = scanner.nextLine().trim().toLowerCase();
             if (!response.equals("yes") && !response.equals("y")) {
@@ -56,6 +56,40 @@ public class Main {
         }
 
         scanner.close();
-        System.out.println("Thank you for using Radix Converter!");
+        System.out.println("Thank you for using the Radix Converter!");
+    }
+
+    /**
+     * Converts a number from one radix to another.
+     */
+    public static String convert(String number, int fromBase, int toBase) {
+        if (fromBase < 2 || fromBase > 36 || toBase < 2 || toBase > 36) {
+            throw new IllegalArgumentException("Radix bases must be between 2 and 36");
+        }
+
+        try {
+            long decimalValue = Long.parseLong(number.toUpperCase(), fromBase);
+            return Long.toString(decimalValue, toBase).toUpperCase();
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid number for base " + fromBase + ": " + number);
+        }
+    }
+
+    /**
+     * Friendly base names for common radices.
+     */
+    public static String getBaseName(int radix) {
+        switch (radix) {
+            case 2:
+                return "Binary";
+            case 8:
+                return "Octal";
+            case 10:
+                return "Decimal";
+            case 16:
+                return "Hexadecimal";
+            default:
+                return "Base-" + radix;
+        }
     }
 }
