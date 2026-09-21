@@ -38,7 +38,7 @@ public class Main {
                 // OUTPUT
                 System.out.println();
                 System.out.println("--- Conversion Result ---");
-                System.out.println(number + " (" + getBaseName(fromBase) + ") = " + result + " (" + getBaseName(toBase) + ")");
+                System.out.println(formatValue(number, fromBase) + " = " + formatValue(result, toBase));
                 System.out.println();
 
             } catch (NumberFormatException e) {
@@ -59,9 +59,7 @@ public class Main {
         System.out.println("Thank you for using the Radix Converter!");
     }
 
-    /**
-     * Converts a number from one radix to another.
-     */
+    /** Converts a number from one radix to another. */
     public static String convert(String number, int fromBase, int toBase) {
         if (fromBase < 2 || fromBase > 36 || toBase < 2 || toBase > 36) {
             throw new IllegalArgumentException("Radix bases must be between 2 and 36");
@@ -76,20 +74,36 @@ public class Main {
     }
 
     /**
-     * Friendly base names for common radices.
+     * Formats decimal values normally and other bases using standard radix notation.
+     * Examples: 10, (1010)₂, (17)₈, (FF)₁₆.
      */
-    public static String getBaseName(int radix) {
-        switch (radix) {
-            case 2:
-                return "Binary";
-            case 8:
-                return "Octal";
-            case 10:
-                return "Decimal";
-            case 16:
-                return "Hexadecimal";
-            default:
-                return "Base-" + radix;
+    public static String formatValue(String value, int base) {
+        if (base == 10) {
+            return value;
         }
+        return "(" + value + ")" + toSubscript(base);
+    }
+
+    /** Converts the digits of a base number to Unicode subscript characters. */
+    public static String toSubscript(int number) {
+        String digits = String.valueOf(number);
+        StringBuilder result = new StringBuilder();
+
+        for (char digit : digits.toCharArray()) {
+            switch (digit) {
+                case '0': result.append('₀'); break;
+                case '1': result.append('₁'); break;
+                case '2': result.append('₂'); break;
+                case '3': result.append('₃'); break;
+                case '4': result.append('₄'); break;
+                case '5': result.append('₅'); break;
+                case '6': result.append('₆'); break;
+                case '7': result.append('₇'); break;
+                case '8': result.append('₈'); break;
+                case '9': result.append('₉'); break;
+                default: result.append(digit);
+            }
+        }
+        return result.toString();
     }
 }
